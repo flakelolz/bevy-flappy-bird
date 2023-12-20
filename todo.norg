@@ -1,0 +1,20 @@
+* Working
+  - ( ) Score
+  - ( ) Collision system
+  - ( ) despawn pipes when they leave the screen
+* TODO
+  - ( ) Game mode state machine
+  - ( ) Game over
+  - ( ) Sound
+  - ( ) Better Jump
+  - ( ) Jump animation
+  - ( ) Move Base
+
+* Done
+  - (x) Spawn Bird
+  - (x) Jumping
+  - (x) Spawn Pipes
+  - (x) Move Pipes
+  - (x) Randomize Pipes position
+  - (x) Background
+  - (x) Base

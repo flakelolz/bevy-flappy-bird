@@ -22,6 +22,7 @@ fn spawn_bird(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn((
         SpriteBundle {
             texture,
+            transform: Transform::from_xyz(0.0, 0.0, 3.0),
             ..default()
         },
         Velocity {
