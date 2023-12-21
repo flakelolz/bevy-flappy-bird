@@ -3,6 +3,7 @@ use bevy::prelude::*;
 mod background;
 mod bird;
 mod pipe;
+mod score;
 
 fn main() {
     App::new()
@@ -23,6 +24,7 @@ fn main() {
         .add_plugins(bird::BirdPlugin)
         .add_plugins(pipe::PipePlugin)
         .add_plugins(background::BackgroundPlugin)
+        .add_plugins(score::ScorePlugin)
         .add_systems(Startup, setup)
         .add_systems(Update, bevy::window::close_on_esc)
         .run();

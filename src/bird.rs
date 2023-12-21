@@ -14,7 +14,7 @@ impl Plugin for BirdPlugin {
 }
 
 #[derive(Component)]
-struct Bird;
+pub struct Bird;
 
 fn spawn_bird(mut commands: Commands, asset_server: Res<AssetServer>) {
     let texture: Handle<Image> = asset_server.load("sprites/yellow_bird/yellowbird-midflap.png");

@@ -1,5 +1,4 @@
 * Working
-  - ( ) Score
   - ( ) Collision system
   - ( ) despawn pipes when they leave the screen
 * TODO
@@ -9,6 +8,7 @@
   - ( ) Better Jump
   - ( ) Jump animation
   - ( ) Move Base
+  - ( ) Scale with screen size
 
 * Done
   - (x) Spawn Bird
@@ -18,3 +18,4 @@
   - (x) Randomize Pipes position
   - (x) Background
   - (x) Base
+  - (x) Score

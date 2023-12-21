@@ -35,7 +35,7 @@ struct PipeTimer {
 struct TopPipe;
 
 #[derive(Component)]
-struct BottomPipe;
+pub struct BottomPipe;
 
 fn load_pipe_image(asset_server: Res<AssetServer>, mut pipes: ResMut<PipeAssets>) {
     let green_texture: Handle<Image> = asset_server.load("sprites/pipes/pipe-green.png");
