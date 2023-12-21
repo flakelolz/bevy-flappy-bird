@@ -1,13 +1,15 @@
 * Working
-  - ( ) despawn pipes when they leave the screen
-* TODO
   - ( ) Game mode state machine
   - ( ) Game over
+* TODO
+  - ( ) Tap to Start playing UI
+  - ( ) Score UI
+  - ( ) Game over UI
   - ( ) Sound
   - ( ) Better Jump
   - ( ) Jump animation
   - ( ) Move Base
-  - ( ) Scale with screen size
+  - (? ) Scale with screen size
 
 * Done
   - (x) Spawn Bird
@@ -19,3 +21,4 @@
   - (x) Base
   - (x) Score
   - (x) Collision system
+  - (x) despawn pipes when they leave the screen

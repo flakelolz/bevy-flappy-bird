@@ -3,6 +3,8 @@ use rand::Rng;
 
 use crate::{Collider, Velocity};
 
+const PIPE_SIZE: Vec2 = Vec2::new(52.0, 320.0);
+
 pub struct PipePlugin;
 
 impl Plugin for PipePlugin {
@@ -15,8 +17,7 @@ impl Plugin for PipePlugin {
             red: None,
         })
         .add_systems(Startup, load_pipe_image)
-        .add_systems(Update, move_pipes)
-        .add_systems(Update, spawn_pipes);
+        .add_systems(Update, (spawn_pipes, move_pipes, despawn_pipes).chain());
     }
 }
 
@@ -49,14 +50,12 @@ fn spawn_pipes(
     mut commands: Commands,
     window_query: Query<&Window, With<bevy::window::PrimaryWindow>>,
     pipe_assets: Res<PipeAssets>,
-    images: Res<Assets<Image>>,
     mut timer: ResMut<PipeTimer>,
     time: Res<Time>,
 ) {
     let window = window_query.single();
     if let Some(texture) = pipe_assets.green.as_ref() {
         if timer.spawn.tick(time.delta()).just_finished() {
-            let image = images.get(texture).expect("Texture not found");
             let gap = window.height() * 0.1;
             let positions = [0.0, gap, -gap, gap * 2.0, gap * 3.0];
             let pipe_position = (window.height() / 2.0) - gap;
@@ -68,7 +67,7 @@ fn spawn_pipes(
                     texture: texture.clone(),
                     transform: Transform {
                         translation: Vec3::new(
-                            window.width() / 2.0 + image.width() as f32,
+                            window.width() / 2.0 + PIPE_SIZE.x,
                             (pipe_position) + offset,
                             1.0,
                         ),
@@ -81,7 +80,7 @@ fn spawn_pipes(
                     value: Vec2::new(100.0, 0.0),
                 },
                 Collider {
-                    size: Vec2::new(image.width() as f32, image.height() as f32) * 0.95,
+                    size: PIPE_SIZE * 0.95,
                 },
                 TopPipe,
             ));
@@ -91,7 +90,7 @@ fn spawn_pipes(
                     texture: texture.clone(),
                     transform: Transform {
                         translation: Vec3::new(
-                            window.width() / 2.0 + image.width() as f32,
+                            window.width() / 2.0 + PIPE_SIZE.x,
                             (pipe_position * -1.0) + offset,
                             1.0,
                         ),
@@ -104,7 +103,7 @@ fn spawn_pipes(
                     value: Vec2::new(100.0, 0.0),
                 },
                 Collider {
-                    size: Vec2::new(image.width() as f32, image.height() as f32) * 0.95,
+                    size: PIPE_SIZE * 0.95,
                 },
                 BottomPipe,
             ));
@@ -118,6 +117,20 @@ fn move_pipes(
 ) {
     for (mut transform, velocity) in query.iter_mut() {
         transform.translation.x -= velocity.value.x * time.delta_seconds();
+    }
+}
+
+fn despawn_pipes(
+    mut commands: Commands,
+    mut pipe_query: Query<(&Transform, Entity), Or<(With<BottomPipe>, With<TopPipe>)>>,
+    window: Query<&Window, With<bevy::window::PrimaryWindow>>,
+) {
+    if let Ok(window) = window.get_single() {
+        for (transform, entity) in pipe_query.iter_mut() {
+            if transform.translation.x < -((window.width() / 2.0) + PIPE_SIZE.x) {
+                commands.entity(entity).despawn();
+            }
+        }
     }
 }
 

@@ -48,8 +48,6 @@ fn load_bird_image(asset_server: Res<AssetServer>, mut birds: ResMut<BirdAssets>
 
 fn spawn_bird(mut commands: Commands, bird_assets: Res<BirdAssets>) {
     if let Some(texture) = bird_assets.yellow.as_ref() {
-        info!("Found texture");
-        info!("Found image");
         commands.spawn((
             SpriteBundle {
                 texture: texture.clone(),
