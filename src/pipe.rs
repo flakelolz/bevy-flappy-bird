@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use rand::Rng;
 
-use crate::Velocity;
+use crate::{Collider, Velocity};
 
 pub struct PipePlugin;
 
@@ -32,7 +32,7 @@ struct PipeTimer {
 }
 
 #[derive(Component)]
-struct TopPipe;
+pub struct TopPipe;
 
 #[derive(Component)]
 pub struct BottomPipe;
@@ -80,6 +80,9 @@ fn spawn_pipes(
                 Velocity {
                     value: Vec2::new(100.0, 0.0),
                 },
+                Collider {
+                    size: Vec2::new(image.width() as f32, image.height() as f32) * 0.95,
+                },
                 TopPipe,
             ));
 
@@ -99,6 +102,9 @@ fn spawn_pipes(
                 },
                 Velocity {
                     value: Vec2::new(100.0, 0.0),
+                },
+                Collider {
+                    size: Vec2::new(image.width() as f32, image.height() as f32) * 0.95,
                 },
                 BottomPipe,
             ));

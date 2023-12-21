@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 mod background;
 mod bird;
+mod collision;
 mod pipe;
 mod score;
 
@@ -24,6 +25,7 @@ fn main() {
         .add_plugins(bird::BirdPlugin)
         .add_plugins(pipe::PipePlugin)
         .add_plugins(background::BackgroundPlugin)
+        .add_plugins(collision::CollisionPlugin)
         .add_plugins(score::ScorePlugin)
         .add_systems(Startup, setup)
         .add_systems(Update, bevy::window::close_on_esc)
@@ -33,6 +35,11 @@ fn main() {
 #[derive(Component, Debug)]
 pub struct Velocity {
     pub value: Vec2,
+}
+
+#[derive(Component)]
+pub struct Collider {
+    pub size: Vec2,
 }
 
 fn setup(mut commands: Commands) {

@@ -1,5 +1,4 @@
 * Working
-  - ( ) Collision system
   - ( ) despawn pipes when they leave the screen
 * TODO
   - ( ) Game mode state machine
@@ -19,3 +18,4 @@
   - (x) Background
   - (x) Base
   - (x) Score
+  - (x) Collision system
