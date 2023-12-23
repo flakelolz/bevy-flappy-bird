@@ -9,6 +9,7 @@ mod pipe;
 mod restart;
 mod score;
 mod state;
+mod sound;
 
 fn main() {
     App::new()
@@ -37,6 +38,7 @@ fn main() {
         .add_plugins(state::StatePlugin)
         .add_plugins(input::InputPlugin)
         .add_plugins(restart::RestartPlugin)
+        .add_plugins(sound::SoundPlugin)
         .run();
 }
 
