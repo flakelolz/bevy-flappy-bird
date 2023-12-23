@@ -25,6 +25,20 @@ fn collision_system(
     mut event_set: ParamSet<(EventWriter<AppEvents>, EventWriter<SoundEvents>)>,
 ) {
     for (bird_transform, bird_collider) in bird.iter() {
+        // Screen Bound
+        if bird_transform.translation.x < -144.0
+            || bird_transform.translation.x > 144.0
+            || bird_transform.translation.y < -256.0
+            || bird_transform.translation.y > 256.0
+        {
+            for mut bird_visibility in bird_query.iter_mut() {
+                *bird_visibility = Visibility::Hidden;
+                event_set.p0().send(AppEvents::Collision);
+                event_set.p1().send(SoundEvents::Hit);
+            }
+        }
+
+        // Pipe Collisions
         for (pipe_transform, pipe_collider) in pipe.iter() {
             if collide(
                 bird_transform.translation,
@@ -41,6 +55,7 @@ fn collision_system(
                 }
             }
         }
+        // Floor Collisions
         for (floor_transform, floor_collider) in floor.iter() {
             if collide(
                 bird_transform.translation,
