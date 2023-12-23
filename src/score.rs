@@ -1,13 +1,13 @@
 use bevy::prelude::*;
 
-use crate::{bird::Bird, pipe::BottomPipe};
+use crate::{bird::Bird, pipe::BottomPipe, state::AppState};
 
 pub struct ScorePlugin;
 
 impl Plugin for ScorePlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(Score { value: 0 })
-            .add_systems(Update, udpate_score);
+            .add_systems(Update, udpate_score.run_if(in_state(AppState::InGame)));
     }
 }
 
@@ -35,4 +35,3 @@ fn udpate_score(
         }
     }
 }
-

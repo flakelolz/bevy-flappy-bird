@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::{Collider, Velocity};
+use crate::{
+    state::{AppEvents, AppState},
+    Collider, Velocity,
+};
 
 const GRAVITY: f32 = -9.8;
 const JUMP: f32 = 45.0;
@@ -15,9 +18,14 @@ impl Plugin for BirdPlugin {
             blue: None,
             red: None,
         })
-        .add_systems(PreStartup, load_bird_image)
-        .add_systems(Startup, spawn_bird)
-        .add_systems(Update, bird_jump);
+        .add_systems(
+            Startup,
+            (load_bird_image, spawn_bird)
+                .chain()
+                .run_if(in_state(AppState::MainMenu)),
+        )
+        .add_systems(Update, bird_jump.run_if(in_state(AppState::InGame)));
+        // .add_systems(Update, restart_bird);
     }
 }
 
@@ -51,7 +59,7 @@ fn spawn_bird(mut commands: Commands, bird_assets: Res<BirdAssets>) {
         commands.spawn((
             SpriteBundle {
                 texture: texture.clone(),
-                transform: Transform::from_xyz(0.0, 0.0, 3.0),
+                transform: Transform::from_xyz(-50.0, -49.0, 3.0),
                 ..default()
             },
             Velocity {
@@ -59,7 +67,7 @@ fn spawn_bird(mut commands: Commands, bird_assets: Res<BirdAssets>) {
             },
             Collider {
                 // size: Vec2::new(image.width() as f32, image.height() as f32),
-                size: BIRD_SIZE * 0.95,
+                size: BIRD_SIZE,
             },
             Bird,
         ));
@@ -68,19 +76,17 @@ fn spawn_bird(mut commands: Commands, bird_assets: Res<BirdAssets>) {
 
 fn bird_jump(
     mut query: Query<(&mut Transform, &mut Velocity), With<Bird>>,
-    key: Res<Input<KeyCode>>,
-    mouse: Res<Input<MouseButton>>,
+    mut event_reader: EventReader<AppEvents>,
     time: Res<Time>,
 ) {
     let gravity_scale = 150.0;
     for (mut transform, mut velocity) in query.iter_mut() {
         velocity.value.y += GRAVITY * gravity_scale * time.delta_seconds();
 
-        if key.just_pressed(KeyCode::Space) || mouse.just_pressed(MouseButton::Left) {
+        if event_reader.read().any(|e| e == &AppEvents::Tap) {
             velocity.value.y = (JUMP * -2.0 * (GRAVITY * gravity_scale)).sqrt();
         }
 
         transform.translation.y += velocity.value.y * time.delta_seconds();
     }
 }
-

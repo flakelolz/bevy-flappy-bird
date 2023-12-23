@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use rand::Rng;
 
-use crate::{Collider, Velocity};
+use crate::{state::AppState, Collider, Velocity};
 
 const PIPE_SIZE: Vec2 = Vec2::new(52.0, 320.0);
 
@@ -17,7 +17,12 @@ impl Plugin for PipePlugin {
             red: None,
         })
         .add_systems(Startup, load_pipe_image)
-        .add_systems(Update, (spawn_pipes, move_pipes, despawn_pipes).chain());
+        .add_systems(
+            Update,
+            (spawn_pipes, move_pipes, despawn_pipes)
+                .chain()
+                .run_if(in_state(AppState::InGame)),
+        );
     }
 }
 
@@ -79,9 +84,7 @@ fn spawn_pipes(
                 Velocity {
                     value: Vec2::new(100.0, 0.0),
                 },
-                Collider {
-                    size: PIPE_SIZE * 0.95,
-                },
+                Collider { size: PIPE_SIZE },
                 TopPipe,
             ));
 
@@ -102,9 +105,7 @@ fn spawn_pipes(
                 Velocity {
                     value: Vec2::new(100.0, 0.0),
                 },
-                Collider {
-                    size: PIPE_SIZE * 0.95,
-                },
+                Collider { size: PIPE_SIZE },
                 BottomPipe,
             ));
         }
@@ -133,4 +134,3 @@ fn despawn_pipes(
         }
     }
 }
-

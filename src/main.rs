@@ -3,8 +3,12 @@ use bevy::prelude::*;
 mod background;
 mod bird;
 mod collision;
+mod input;
+mod menu;
 mod pipe;
+mod restart;
 mod score;
+mod state;
 
 fn main() {
     App::new()
@@ -22,13 +26,17 @@ fn main() {
                 })
                 .build(),
         )
+        .add_systems(Startup, spawn_camera)
+        .add_systems(Update, bevy::window::close_on_esc)
         .add_plugins(bird::BirdPlugin)
         .add_plugins(pipe::PipePlugin)
         .add_plugins(background::BackgroundPlugin)
         .add_plugins(collision::CollisionPlugin)
         .add_plugins(score::ScorePlugin)
-        .add_systems(Startup, setup)
-        .add_systems(Update, bevy::window::close_on_esc)
+        .add_plugins(menu::MenuPlugin)
+        .add_plugins(state::StatePlugin)
+        .add_plugins(input::InputPlugin)
+        .add_plugins(restart::RestartPlugin)
         .run();
 }
 
@@ -42,6 +50,6 @@ pub struct Collider {
     pub size: Vec2,
 }
 
-fn setup(mut commands: Commands) {
+fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 }

@@ -35,4 +35,3 @@ fn spawn_base(
         ..default()
     });
 }
-
