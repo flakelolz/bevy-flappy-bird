@@ -4,6 +4,7 @@ use crate::{
     bird::Bird,
     menu::GameOver,
     pipe::{BottomPipe, TopPipe},
+    score::Score,
     state::{AppEvents, AppState},
 };
 pub struct RestartPlugin;
@@ -21,6 +22,7 @@ fn restart(
     mut game_over: Query<&mut Visibility, (With<GameOver>, Without<Bird>)>,
     states: Res<State<AppState>>,
     mut events: EventWriter<AppEvents>,
+    mut score: ResMut<Score>,
 ) {
     if states.as_ref() == &AppState::Restart {
         if let Ok((mut bird_transform, mut bird_visibility)) = bird_query.get_single_mut() {
@@ -34,6 +36,8 @@ fn restart(
         if let Ok(mut game_over) = game_over.get_single_mut() {
             *game_over = Visibility::Hidden;
         }
+
+        score.value = 0;
         events.send(AppEvents::Restart);
     }
 }

@@ -27,3 +27,5 @@
   - (x) Tap to Start playing UI
   - (x) Game over UI
   - (x) Sound
+  - (x) Reset Score on game over
+  - (x) Floor Collision

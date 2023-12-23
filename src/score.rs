@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{bird::Bird, pipe::BottomPipe, state::AppState, sound::SoundEvents};
+use crate::{bird::Bird, pipe::BottomPipe, sound::SoundEvents, state::AppState};
 
 pub struct ScorePlugin;
 
@@ -15,8 +15,8 @@ impl Plugin for ScorePlugin {
 struct Scored;
 
 #[derive(Resource)]
-struct Score {
-    value: i32,
+pub struct Score {
+    pub value: i32,
 }
 
 fn udpate_score(

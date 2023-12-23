@@ -8,8 +8,8 @@ mod menu;
 mod pipe;
 mod restart;
 mod score;
-mod state;
 mod sound;
+mod state;
 
 fn main() {
     App::new()
