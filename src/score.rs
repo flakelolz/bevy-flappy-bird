@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{bird::Bird, pipe::BottomPipe, sound::SoundEvents, state::AppState};
+use crate::{bird::Bird, ui::ScoreUI, pipe::BottomPipe, sound::SoundEvents, state::AppState};
 
 pub struct ScorePlugin;
 
@@ -24,16 +24,19 @@ fn udpate_score(
     mut score: ResMut<Score>,
     bird: Query<&Transform, With<Bird>>,
     pipes: Query<(&Transform, Entity), (With<BottomPipe>, Without<Scored>)>,
+    mut score_ui: Query<&mut Text, With<ScoreUI>>,
     mut sound_events: EventWriter<SoundEvents>,
 ) {
     for bird in bird.iter() {
         for (pipe, entity) in pipes.iter() {
             if bird.translation.x > pipe.translation.x {
                 score.value += 1;
-                println!("Score: {}", score.value);
                 commands.entity(entity).insert(Scored);
                 sound_events.send(SoundEvents::Score);
             }
         }
     }
+
+    let mut text = score_ui.single_mut();
+    text.sections[0].value = format!("{}", score.value);
 }

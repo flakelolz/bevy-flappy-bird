@@ -22,7 +22,7 @@ pub enum AppState {
 pub enum AppEvents {
     Collision,
     Tap,
-    Restart,
+    Restarted,
 }
 
 fn state_machine(
@@ -45,7 +45,7 @@ fn state_machine(
     }
 
     if states.as_ref() == &AppState::Restart
-        && event_reader.read().any(|e| e == &AppEvents::Restart)
+        && event_reader.read().any(|e| e == &AppEvents::Restarted)
     {
         commands.insert_resource(NextState(Some(AppState::MainMenu)));
     }

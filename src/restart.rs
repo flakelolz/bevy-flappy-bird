@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     bird::Bird,
-    menu::GameOver,
+    ui::GameOver,
     pipe::{BottomPipe, TopPipe},
     score::Score,
     state::{AppEvents, AppState},
@@ -38,6 +38,6 @@ fn restart(
         }
 
         score.value = 0;
-        events.send(AppEvents::Restart);
+        events.send(AppEvents::Restarted);
     }
 }

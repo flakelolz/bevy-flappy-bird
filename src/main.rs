@@ -1,10 +1,10 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, window::EnabledButtons};
 
 mod background;
 mod bird;
 mod collision;
 mod input;
-mod menu;
+mod ui;
 mod pipe;
 mod restart;
 mod score;
@@ -21,6 +21,11 @@ fn main() {
                         title: "Flappy Bird".into(),
                         resolution: (288., 512.).into(),
                         resizable: false,
+                        enabled_buttons: EnabledButtons {
+                            minimize: false,
+                            maximize: false,
+                            close: true,
+                        },
                         ..default()
                     }),
                     ..default()
@@ -34,7 +39,7 @@ fn main() {
         .add_plugins(background::BackgroundPlugin)
         .add_plugins(collision::CollisionPlugin)
         .add_plugins(score::ScorePlugin)
-        .add_plugins(menu::MenuPlugin)
+        .add_plugins(ui::MenuPlugin)
         .add_plugins(state::StatePlugin)
         .add_plugins(input::InputPlugin)
         .add_plugins(restart::RestartPlugin)

@@ -1,12 +1,11 @@
 * Working
-  - ( ) Score UI
+  - ( ) Move animation for the floor
 
 * TODO
   - ( ) Better Jump
   - ( ) Jump animation
-  - ( ) Move animation for the floor
-  - ( ) Save Max Score
   - ( ) Randomize bird, pipes and background
+  - ( ) Save Max Score
   - ( ) Game Over UI for max score and retry button
   - ( ) Setup App Icon
   - (?) Scale with screen size
@@ -30,3 +29,4 @@
   - (x) Reset Score on game over
   - (x) Floor Collision
   - (x) Screen Bound Collision
+  - (x) Score UI
