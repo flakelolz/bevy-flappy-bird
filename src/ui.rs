@@ -1,4 +1,4 @@
-use bevy::{asset::embedded_asset, prelude::*};
+use bevy::prelude::*;
 
 use crate::{score::Score, state::AppState};
 
@@ -9,12 +9,6 @@ impl Plugin for MenuPlugin {
         app.add_systems(Startup, (main_menu, score_ui))
             .add_systems(Startup, game_over)
             .add_systems(Update, hide_menus);
-
-        // NOTE: Windows only problem
-        #[cfg(all(target_family = "windows", not(target_env = "gnu")))]
-        {
-            embedded_asset!(app, "src\\", "..\\assets\\fonts\\04B_19__.ttf");
-        }
     }
 }
 
@@ -58,7 +52,6 @@ fn score_ui(mut commands: Commands, asset_server: Res<AssetServer>, score: Res<S
         TextBundle::from_section(
             format!("{}", score.value),
             TextStyle {
-                // TODO: What's the path for the embedded asset?
                 font: asset_server.load("fonts/04B_19__.ttf"),
                 font_size: 30.0,
                 color: Color::WHITE,
@@ -129,3 +122,4 @@ fn hide_menus(
         }
     }
 }
+

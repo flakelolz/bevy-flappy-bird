@@ -1,19 +1,23 @@
 use bevy::{prelude::*, window::EnabledButtons};
+use bevy_embedded_assets::{EmbeddedAssetPlugin, PluginMode};
 
 mod background;
 mod bird;
 mod collision;
 mod input;
-mod ui;
 mod pipe;
 mod restart;
 mod score;
 mod sound;
 mod state;
+mod ui;
 
 fn main() {
     App::new()
-        .add_plugins(
+        .add_plugins((
+            EmbeddedAssetPlugin {
+                mode: PluginMode::ReplaceDefault,
+            },
             DefaultPlugins
                 .set(ImagePlugin::default_nearest())
                 .set(WindowPlugin {
@@ -31,7 +35,7 @@ fn main() {
                     ..default()
                 })
                 .build(),
-        )
+        ))
         .add_systems(Startup, spawn_camera)
         .add_systems(Update, bevy::window::close_on_esc)
         .add_plugins(bird::BirdPlugin)
@@ -60,3 +64,4 @@ pub struct Collider {
 fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 }
+
