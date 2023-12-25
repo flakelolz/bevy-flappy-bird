@@ -122,4 +122,3 @@ fn hide_menus(
         }
     }
 }
-

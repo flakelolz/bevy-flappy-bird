@@ -74,4 +74,3 @@ fn collision_system(
         }
     }
 }
-

@@ -22,7 +22,6 @@ impl Plugin for BirdPlugin {
                     .run_if(in_state(AppState::MainMenu)),
             )
             .add_systems(Update, bird_jump.run_if(in_state(AppState::InGame)));
-        // .add_systems(Update, restart_bird);
     }
 }
 
@@ -30,10 +29,10 @@ impl Plugin for BirdPlugin {
 pub struct Bird;
 
 #[derive(Resource, Default)]
-struct BirdAssets {
-    yellow: Option<Handle<Image>>,
-    blue: Option<Handle<Image>>,
-    red: Option<Handle<Image>>,
+pub struct BirdAssets {
+    pub yellow: Option<Handle<Image>>,
+    pub blue: Option<Handle<Image>>,
+    pub red: Option<Handle<Image>>,
 }
 
 fn load_bird_image(asset_server: Res<AssetServer>, mut birds: ResMut<BirdAssets>) {
@@ -43,28 +42,26 @@ fn load_bird_image(asset_server: Res<AssetServer>, mut birds: ResMut<BirdAssets>
 }
 
 fn spawn_bird(mut commands: Commands, bird_assets: Res<BirdAssets>) {
-    if let Some(texture) = bird_assets.yellow.as_ref() {
-        commands.spawn((
-            SpriteBundle {
-                texture: texture.clone(),
-                transform: Transform::from_xyz(-50.0, -49.0, 3.0),
-                ..default()
-            },
-            Velocity {
-                value: Vec2::new(0.0, 0.0),
-            },
-            Collider {
-                // size: Vec2::new(image.width() as f32, image.height() as f32),
-                size: BIRD_SIZE,
-            },
-            Bird,
-        ));
-    }
+    let texture = bird_assets.yellow.as_ref().expect("Embedded in the binary");
+    commands.spawn((
+        SpriteBundle {
+            texture: texture.clone(),
+            transform: Transform::from_xyz(-50.0, -49.0, 3.0),
+            ..default()
+        },
+        Velocity {
+            value: Vec2::new(0.0, 0.0),
+        },
+        Collider {
+            // size: Vec2::new(image.width() as f32, image.height() as f32),
+            size: BIRD_SIZE,
+        },
+        Bird,
+    ));
 }
 
 fn bird_jump(
     mut query: Query<(&mut Transform, &mut Velocity), With<Bird>>,
-    // mut event_reader: EventReader<AppEvents>,
     mut event_set: ParamSet<(EventReader<AppEvents>, EventWriter<SoundEvents>)>,
     time: Res<Time>,
 ) {

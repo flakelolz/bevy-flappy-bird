@@ -12,11 +12,9 @@ impl Plugin for PipePlugin {
         app.insert_resource(PipeTimer {
             spawn: Timer::from_seconds(1.7, TimerMode::Repeating),
         })
-        .insert_resource(PipeAssets {
-            green: None,
-            red: None,
-        })
-        .add_systems(Startup, load_pipe_image)
+        .insert_resource(PipeAssets::default())
+        .insert_resource(RandomPipe::default())
+        .add_systems(Startup, load_pipe_texture)
         .add_systems(
             Update,
             (spawn_pipes, move_pipes, despawn_pipes)
@@ -26,10 +24,15 @@ impl Plugin for PipePlugin {
     }
 }
 
-#[derive(Resource)]
-struct PipeAssets {
-    green: Option<Handle<Image>>,
-    red: Option<Handle<Image>>,
+#[derive(Resource, Default)]
+pub struct PipeAssets {
+    pub green: Option<Handle<Image>>,
+    pub red: Option<Handle<Image>>,
+}
+
+#[derive(Resource, Default)]
+pub struct RandomPipe {
+    pub texture: Option<Handle<Image>>,
 }
 
 #[derive(Resource)]
@@ -43,72 +46,77 @@ pub struct TopPipe;
 #[derive(Component)]
 pub struct BottomPipe;
 
-fn load_pipe_image(asset_server: Res<AssetServer>, mut pipes: ResMut<PipeAssets>) {
-    let green_texture: Handle<Image> = asset_server.load("sprites/pipes/pipe-green.png");
-    let red_texture: Handle<Image> = asset_server.load("sprites/pipes/pipe-red.png");
-
-    pipes.green = Some(green_texture);
-    pipes.red = Some(red_texture);
+fn load_pipe_texture(asset_server: Res<AssetServer>, mut pipes: ResMut<PipeAssets>) {
+    pipes.green = Some(asset_server.load("sprites/pipes/pipe-green.png"));
+    pipes.red = Some(asset_server.load("sprites/pipes/pipe-red.png"));
 }
 
 fn spawn_pipes(
     mut commands: Commands,
     window_query: Query<&Window, With<bevy::window::PrimaryWindow>>,
     pipe_assets: Res<PipeAssets>,
+    random_pipe: Res<RandomPipe>,
     mut timer: ResMut<PipeTimer>,
     time: Res<Time>,
 ) {
     let window = window_query.single();
-    if let Some(texture) = pipe_assets.green.as_ref() {
-        if timer.spawn.tick(time.delta()).just_finished() {
-            let gap = window.height() * 0.1;
-            let positions = [0.0, gap, -gap, gap * 2.0, gap * 3.0];
-            let pipe_position = (window.height() / 2.0) - gap;
-            let rng = rand::thread_rng().gen_range(0..positions.len());
-            let offset = positions[rng];
+    let texture = if random_pipe.texture.as_ref().is_some() {
+        random_pipe
+            .texture
+            .as_ref()
+            .expect("Embedded in the binary")
+    } else {
+        pipe_assets.green.as_ref().expect("Embedded in the binary")
+    };
 
-            commands.spawn((
-                SpriteBundle {
-                    texture: texture.clone(),
-                    transform: Transform {
-                        translation: Vec3::new(
-                            window.width() / 2.0 + PIPE_SIZE.x,
-                            (pipe_position) + offset,
-                            1.0,
-                        ),
-                        rotation: Quat::from_rotation_x(180.0_f32.to_radians()),
-                        ..default()
-                    },
+    if timer.spawn.tick(time.delta()).just_finished() {
+        let gap = window.height() * 0.1;
+        let positions = [0.0, gap, -gap, gap * 2.0, gap * 3.0];
+        let pipe_position = (window.height() / 2.0) - gap;
+        let rng = rand::thread_rng().gen_range(0..positions.len());
+        let offset = positions[rng];
+
+        commands.spawn((
+            SpriteBundle {
+                texture: texture.clone(),
+                transform: Transform {
+                    translation: Vec3::new(
+                        window.width() / 2.0 + PIPE_SIZE.x,
+                        (pipe_position) + offset,
+                        1.0,
+                    ),
+                    rotation: Quat::from_rotation_x(180.0_f32.to_radians()),
                     ..default()
                 },
-                Velocity {
-                    value: Vec2::new(100.0, 0.0),
-                },
-                Collider { size: PIPE_SIZE },
-                TopPipe,
-            ));
+                ..default()
+            },
+            Velocity {
+                value: Vec2::new(100.0, 0.0),
+            },
+            Collider { size: PIPE_SIZE },
+            TopPipe,
+        ));
 
-            commands.spawn((
-                SpriteBundle {
-                    texture: texture.clone(),
-                    transform: Transform {
-                        translation: Vec3::new(
-                            window.width() / 2.0 + PIPE_SIZE.x,
-                            (pipe_position * -1.0) + offset,
-                            1.0,
-                        ),
-                        ..default()
-                    },
-
+        commands.spawn((
+            SpriteBundle {
+                texture: texture.clone(),
+                transform: Transform {
+                    translation: Vec3::new(
+                        window.width() / 2.0 + PIPE_SIZE.x,
+                        (pipe_position * -1.0) + offset,
+                        1.0,
+                    ),
                     ..default()
                 },
-                Velocity {
-                    value: Vec2::new(100.0, 0.0),
-                },
-                Collider { size: PIPE_SIZE },
-                BottomPipe,
-            ));
-        }
+
+                ..default()
+            },
+            Velocity {
+                value: Vec2::new(100.0, 0.0),
+            },
+            Collider { size: PIPE_SIZE },
+            BottomPipe,
+        ));
     }
 }
 

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{bird::Bird, ui::ScoreUI, pipe::BottomPipe, sound::SoundEvents, state::AppState};
+use crate::{bird::Bird, pipe::BottomPipe, sound::SoundEvents, state::AppState, ui::ScoreUI};
 
 pub struct ScorePlugin;
 
