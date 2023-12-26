@@ -28,6 +28,7 @@ impl Plugin for RestartPlugin {
     }
 }
 
+// All the values that need to be changed to restart the game
 fn restart(
     mut commands: Commands,
     mut pipe_query: Query<Entity, Or<(With<BottomPipe>, With<TopPipe>)>>,
@@ -76,6 +77,7 @@ fn restart(
 fn randomize_bird(mut query: Query<&mut AnimationIndices, With<Bird>>) {
     let rng = rand::thread_rng().gen_range(0..3);
     for mut index in &mut query {
+        // Randomize bird by changing the first and last animation indeces
         match rng {
             0 => {
                 index.first = 0;
@@ -95,6 +97,7 @@ fn randomize_bird(mut query: Query<&mut AnimationIndices, With<Bird>>) {
 
 fn randomize_pipes(assets: Res<PipeAssets>, mut randomize: ResMut<RandomPipe>) {
     let rng = rand::thread_rng().gen_range(0..2);
+    // Randomize pipe by adding a texture to the RandomPipe resource
     randomize.as_mut().texture = match rng {
         0 => Some(assets.as_ref().green.clone().expect("Embedded")),
         _ => Some(assets.as_ref().red.clone().expect("Embedded")),
@@ -107,6 +110,7 @@ fn randomize_background(
 ) {
     let rng = rand::thread_rng().gen_range(0..2);
     if let Ok(mut sprite) = query.get_single_mut() {
+        // Randomize background by changing the texture
         match rng {
             0 => {
                 *sprite = assets
@@ -123,3 +127,4 @@ fn randomize_background(
         }
     }
 }
+

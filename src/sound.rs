@@ -20,6 +20,7 @@ pub enum SoundEvents {
     Hit,
 }
 
+// TODO: Add swoosh and die sounds
 #[derive(Resource, Default)]
 struct SoundAssets {
     score: Option<Handle<AudioSource>>,
@@ -39,10 +40,11 @@ fn play_sound(
     mut events: EventReader<SoundEvents>,
 ) {
     for event in events.read() {
+        // Play sounds everytime a respective event is received
         match event {
             SoundEvents::Flap => {
                 commands.spawn(AudioBundle {
-                    source: sound.flap.clone().expect("Flap sound not found"),
+                    source: sound.flap.clone().expect("Embedded"),
                     settings: PlaybackSettings {
                         mode: PlaybackMode::Despawn,
                         volume: Volume::new_relative(0.1),
@@ -52,7 +54,7 @@ fn play_sound(
             }
             SoundEvents::Score => {
                 commands.spawn(AudioBundle {
-                    source: sound.score.clone().expect("Score sound not found"),
+                    source: sound.score.clone().expect("Embedded"),
                     settings: PlaybackSettings {
                         mode: PlaybackMode::Despawn,
                         volume: Volume::new_relative(0.1),
@@ -63,7 +65,7 @@ fn play_sound(
 
             SoundEvents::Hit => {
                 commands.spawn(AudioBundle {
-                    source: sound.hit.clone().expect("Hit sound not found"),
+                    source: sound.hit.clone().expect("Embedded"),
                     settings: PlaybackSettings {
                         mode: PlaybackMode::Despawn,
                         volume: Volume::new_relative(0.1),
@@ -74,3 +76,4 @@ fn play_sound(
         }
     }
 }
+

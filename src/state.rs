@@ -25,6 +25,7 @@ pub enum AppEvents {
     Restarted,
 }
 
+// State logic driven by state events received
 fn state_machine(
     mut commands: Commands,
     states: Res<State<AppState>>,

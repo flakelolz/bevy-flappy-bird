@@ -5,6 +5,7 @@ use crate::{state::AppState, Collider, Velocity};
 
 const PIPE_SIZE: Vec2 = Vec2::new(52.0, 320.0);
 const GAP: f32 = 47.0;
+const SPEED: f32 = 150.0;
 
 pub struct PipePlugin;
 
@@ -61,6 +62,7 @@ fn spawn_pipes(
     time: Res<Time>,
 ) {
     let window = window_query.single();
+    // Random pipe after the first round when a texture gets loaded on the RandomPipe resource
     let texture = if random_pipe.texture.as_ref().is_some() {
         random_pipe
             .texture
@@ -71,19 +73,20 @@ fn spawn_pipes(
     };
 
     if timer.spawn.tick(time.delta()).just_finished() {
-        let positions = [0.0, GAP, -GAP, GAP * 2.0, GAP * 3.0];
-        let pipe_position = (window.height() / 2.0) - GAP;
-        let rng = rand::thread_rng().gen_range(0..positions.len());
-        let offset = positions[rng];
-        let move_speed = 150.0;
+        // All posible random positions
+        let base_position = (window.height() / 2.0) - GAP;
+        let random_positions = [0.0, GAP, -GAP, GAP * 2.0, GAP * 3.0];
+        let rng = rand::thread_rng().gen_range(0..random_positions.len());
+        let offset = random_positions[rng];
 
+        // Spawn top pipe
         commands.spawn((
             SpriteBundle {
                 texture: texture.clone(),
                 transform: Transform {
                     translation: Vec3::new(
                         window.width() / 2.0 + PIPE_SIZE.x,
-                        (pipe_position) + offset,
+                        (base_position) + offset,
                         1.0,
                     ),
                     rotation: Quat::from_rotation_x(180.0_f32.to_radians()),
@@ -92,19 +95,20 @@ fn spawn_pipes(
                 ..default()
             },
             Velocity {
-                value: Vec2::new(move_speed, 0.0),
+                value: Vec2::new(SPEED, 0.0),
             },
             Collider { size: PIPE_SIZE },
             TopPipe,
         ));
 
+        // Spawn bottom pipe
         commands.spawn((
             SpriteBundle {
                 texture: texture.clone(),
                 transform: Transform {
                     translation: Vec3::new(
                         window.width() / 2.0 + PIPE_SIZE.x,
-                        (pipe_position * -1.0) + offset,
+                        (base_position * -1.0) + offset,
                         1.0,
                     ),
                     ..default()
@@ -113,7 +117,7 @@ fn spawn_pipes(
                 ..default()
             },
             Velocity {
-                value: Vec2::new(move_speed, 0.0),
+                value: Vec2::new(SPEED, 0.0),
             },
             Collider { size: PIPE_SIZE },
             BottomPipe,

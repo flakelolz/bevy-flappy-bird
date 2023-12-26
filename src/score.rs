@@ -22,21 +22,25 @@ pub struct Score {
 fn udpate_score(
     mut commands: Commands,
     mut score: ResMut<Score>,
-    bird: Query<&Transform, With<Bird>>,
+    bird_query: Query<&Transform, With<Bird>>,
     pipes: Query<(&Transform, Entity), (With<BottomPipe>, Without<Scored>)>,
     mut score_ui: Query<&mut Text, With<ScoreUI>>,
     mut sound_events: EventWriter<SoundEvents>,
 ) {
-    for bird in bird.iter() {
-        for (pipe, entity) in pipes.iter() {
-            if bird.translation.x > pipe.translation.x {
-                score.value += 1;
-                commands.entity(entity).insert(Scored);
-                sound_events.send(SoundEvents::Score);
-            }
+    let bird = bird_query.get_single().expect("A bird should always exist");
+
+    // Every time the bird's middle point is greater than the pipe's middle point, tag it as scored
+    // and increase the score counter
+    for (pipe, entity) in pipes.iter() {
+        if bird.translation.x > pipe.translation.x {
+            score.value += 1;
+            commands.entity(entity).insert(Scored);
+            sound_events.send(SoundEvents::Score);
         }
     }
 
+    // Update the score UI
     let mut text = score_ui.single_mut();
     text.sections[0].value = format!("{}", score.value);
 }
+

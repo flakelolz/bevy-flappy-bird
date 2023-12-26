@@ -84,6 +84,7 @@ fn game_over(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 }
 
+// Hides menus based on which state the game is in
 fn hide_menus(
     states: Res<State<AppState>>,
     mut menus: ParamSet<(
