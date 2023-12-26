@@ -1,13 +1,13 @@
 * Working
-  - ( ) Move animation for the floor
+  - ( ) Jump animation
 
 * TODO
   - ( ) Better Jump
-  - ( ) Jump animation
-  - ( ) Randomize bird, pipes and background
+  - ( ) Move animation for the floor
   - ( ) Save Max Score
   - ( ) Game Over UI for max score and retry button
   - ( ) Setup App Icon
+  - ( ) Fix double death sound bug
   - (?) Scale with screen size
 
 * Done
@@ -30,3 +30,5 @@
   - (x) Floor Collision
   - (x) Screen Bound Collision
   - (x) Score UI
+  - (x) Randomize bird, pipes and background
+  - (x) Animation System

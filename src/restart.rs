@@ -3,7 +3,7 @@ use rand::Rng;
 
 use crate::{
     background::{Background, BackgroundAssets},
-    bird::{Bird, BirdAssets},
+    bird::{AnimationIndices, Bird},
     pipe::{BottomPipe, PipeAssets, RandomPipe, TopPipe},
     score::Score,
     state::{AppEvents, AppState},
@@ -24,16 +24,27 @@ impl Plugin for RestartPlugin {
 fn restart(
     mut commands: Commands,
     mut pipe_query: Query<Entity, Or<(With<BottomPipe>, With<TopPipe>)>>,
-    mut bird_query: Query<(&mut Transform, &mut Visibility), With<Bird>>,
+    mut bird_query: Query<
+        (
+            &mut Transform,
+            &mut Visibility,
+            &mut TextureAtlasSprite,
+            &AnimationIndices,
+        ),
+        With<Bird>,
+    >,
     mut game_over: Query<&mut Visibility, (With<GameOver>, Without<Bird>)>,
     states: Res<State<AppState>>,
     mut events: EventWriter<AppEvents>,
     mut score: ResMut<Score>,
 ) {
     if states.as_ref() == &AppState::Restart {
-        if let Ok((mut bird_transform, mut bird_visibility)) = bird_query.get_single_mut() {
+        if let Ok((mut bird_transform, mut bird_visibility, mut bird_sprite, index)) =
+            bird_query.get_single_mut()
+        {
             *bird_transform = Transform::from_xyz(-50.0, -49.0, 3.0);
             *bird_visibility = Visibility::Visible;
+            bird_sprite.index = index.first;
         }
         for pipe in pipe_query.iter_mut() {
             commands.entity(pipe).despawn();
@@ -48,27 +59,21 @@ fn restart(
     }
 }
 
-fn randomize_bird(mut query: Query<&mut Handle<Image>, With<Bird>>, assets: Res<BirdAssets>) {
+fn randomize_bird(mut query: Query<&mut AnimationIndices, With<Bird>>) {
     let rng = rand::thread_rng().gen_range(0..3);
-    if let Ok(mut sprite) = query.get_single_mut() {
+    for mut index in &mut query {
         match rng {
             0 => {
-                *sprite = assets
-                    .yellow
-                    .clone()
-                    .expect("Image should be loaded by this point");
+                index.first = 0;
+                index.last = 2;
             }
             1 => {
-                *sprite = assets
-                    .blue
-                    .clone()
-                    .expect("Image should be loaded by this point");
+                index.first = 3;
+                index.last = 5;
             }
             _ => {
-                *sprite = assets
-                    .red
-                    .clone()
-                    .expect("Image should be loaded by this point");
+                index.first = 6;
+                index.last = 8;
             }
         }
     }
