@@ -29,6 +29,7 @@ impl Plugin for BirdPlugin {
                 Update,
                 animate_bird.run_if(not(in_state(AppState::Restart))),
             )
+            .add_systems(Update, sine_movement.run_if(in_state(AppState::MainMenu)))
             .add_systems(Update, bird_jump.run_if(in_state(AppState::InGame)));
     }
 }
@@ -49,6 +50,13 @@ pub struct AnimationIndices {
 
 #[derive(Component, Deref, DerefMut)]
 struct AnimationTimer(Timer);
+
+#[derive(Component, Default)]
+struct Oscillation {
+    amplitude: f32,
+    length: f32,
+    frequency: f32,
+}
 
 fn load_bird_atlas(
     asset_server: Res<AssetServer>,
@@ -85,8 +93,48 @@ fn spawn_bird(mut commands: Commands, bird_assets: ResMut<BirdAssets>) {
         AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
         Velocity::default(),
         Collider { size: BIRD_SIZE },
+        Oscillation {
+            amplitude: 100.0,
+            length: 0.2,
+            frequency: 10.0,
+        },
         Bird,
     ));
+}
+
+fn bird_jump(
+    mut query: Query<(&mut Transform, &mut Velocity), With<Bird>>,
+    mut event_set: ParamSet<(EventReader<AppEvents>, EventWriter<SoundEvents>)>,
+    window_query: Query<&Window, With<bevy::window::PrimaryWindow>>,
+    time: Res<Time>,
+) {
+    let window = window_query
+        .get_single()
+        .expect("Window should exist at this point");
+    let gravity_scale = 150.0;
+
+    for (mut transform, mut velocity) in &mut query {
+        velocity.value.y += GRAVITY * gravity_scale * time.delta_seconds();
+
+        // Jump when the Tap event occurs and the bird is on the screen
+        if event_set.p0().read().any(|e| e == &AppEvents::Tap)
+            && transform.translation.y < window.height() / 2.0
+        {
+            // Angle the bird upwards when ascending
+            transform.rotation = Quat::from_rotation_z(0.35);
+            velocity.value.y = (JUMP * -2.0 * (GRAVITY * gravity_scale)).sqrt();
+            // Play the Flap sound
+            event_set.p1().send(SoundEvents::Flap);
+        }
+
+        // Angle the bird downwards when falling
+        if velocity.value.y < FALLING {
+            transform.rotation = transform.rotation.lerp(Quat::from_rotation_z(-1.0), 0.08);
+        }
+
+        // Apply movement
+        transform.translation.y += velocity.value.y * time.delta_seconds();
+    }
 }
 
 fn animate_bird(
@@ -119,31 +167,16 @@ fn animate_bird(
     }
 }
 
-fn bird_jump(
-    mut query: Query<(&mut Transform, &mut Velocity), With<Bird>>,
-    mut event_set: ParamSet<(EventReader<AppEvents>, EventWriter<SoundEvents>)>,
-    window_query: Query<&Window, With<bevy::window::PrimaryWindow>>,
+fn sine_movement(
+    mut query: Query<(&mut Transform, &mut Velocity, &Oscillation), With<Bird>>,
     time: Res<Time>,
 ) {
-    let window = window_query
-        .get_single()
-        .expect("Window should exist at this point");
-    let gravity_scale = 150.0;
-    for (mut transform, mut velocity) in &mut query {
-        velocity.value.y += GRAVITY * gravity_scale * time.delta_seconds();
+    for (mut transform, mut velocity, oscillation) in &mut query {
+        velocity.value.y = (time.elapsed_seconds() * oscillation.frequency).sin()
+            * oscillation.amplitude
+            * oscillation.length;
 
-        if event_set.p0().read().any(|e| e == &AppEvents::Tap)
-            && transform.translation.y < window.height() / 2.0
-        {
-            transform.rotation = Quat::from_rotation_z(0.35);
-            velocity.value.y = (JUMP * -2.0 * (GRAVITY * gravity_scale)).sqrt();
-            event_set.p1().send(SoundEvents::Flap);
-        }
-
-        if velocity.value.y < FALLING {
-            transform.rotation = transform.rotation.lerp(Quat::from_rotation_z(-1.0), 0.08);
-        }
-
+        // Apply movement
         transform.translation.y += velocity.value.y * time.delta_seconds();
     }
 }

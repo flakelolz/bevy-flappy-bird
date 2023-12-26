@@ -28,7 +28,7 @@ fn main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
         SpriteBundle {
             texture,
             visibility: Visibility::Hidden,
-            transform: Transform::from_xyz(0.0, 0.0, 99.0),
+            transform: Transform::from_xyz(0.0, 20.0, 99.0),
             ..default()
         },
         MainMenu,
