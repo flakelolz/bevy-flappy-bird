@@ -1,10 +1,10 @@
 * Working
-  - ( ) Bird up and down motion in main menu state
-
-* TODO
   - ( ) Move animation for the floor
   - ( ) Save Max Score
   - ( ) Game Over UI for max score and retry button
+  - ( ) Add "swoosh" and "die" sounds
+
+* TODO
   - ( ) Setup App Icon
   - ( ) Fix double death sound bug
   - ( ) Better Jump
@@ -33,3 +33,4 @@
   - (x) Randomize bird, pipes and background
   - (x) Animation System
   - (x) Jump animation
+  - (x) Bird oscillating movement on the main menu screen
