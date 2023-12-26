@@ -11,7 +11,7 @@ use crate::{
 const GRAVITY: f32 = -9.8;
 const JUMP: f32 = 45.0;
 const BIRD_SIZE: Vec2 = Vec2::new(34.0, 24.0);
-const ASCENDING: f32 = 200.0;
+const ASCENDING: f32 = 250.0;
 const FALLING: f32 = -250.0;
 
 pub struct BirdPlugin;
@@ -60,7 +60,7 @@ fn load_bird_atlas(
         texture_handle.clone(),
         Vec2::new(34.0, 24.0),
         4,
-        4,
+        3,
         None,
         None,
     );

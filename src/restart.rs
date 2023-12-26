@@ -14,9 +14,15 @@ pub struct RestartPlugin;
 
 impl Plugin for RestartPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, restart).add_systems(
+        app.add_systems(
             Update,
-            (randomize_bird, randomize_pipes, randomize_background)
+            (
+                randomize_bird,
+                randomize_pipes,
+                randomize_background,
+                restart,
+            )
+                .chain()
                 .run_if(in_state(AppState::Restart)),
         );
     }
@@ -77,11 +83,11 @@ fn randomize_bird(mut query: Query<&mut AnimationIndices, With<Bird>>) {
             }
             1 => {
                 index.first = 4;
-                index.last = 6;
+                index.last = 7;
             }
             _ => {
-                index.first = 7;
-                index.last = 9;
+                index.first = 8;
+                index.last = 11;
             }
         }
     }
