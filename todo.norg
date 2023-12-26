@@ -1,13 +1,13 @@
 * Working
-  - ( ) Jump animation
+  - ( ) Bird up and down motion in main menu state
 
 * TODO
-  - ( ) Better Jump
   - ( ) Move animation for the floor
   - ( ) Save Max Score
   - ( ) Game Over UI for max score and retry button
   - ( ) Setup App Icon
   - ( ) Fix double death sound bug
+  - ( ) Better Jump
   - (?) Scale with screen size
 
 * Done
@@ -32,3 +32,4 @@
   - (x) Score UI
   - (x) Randomize bird, pipes and background
   - (x) Animation System
+  - (x) Jump animation

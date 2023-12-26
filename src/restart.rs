@@ -8,6 +8,7 @@ use crate::{
     score::Score,
     state::{AppEvents, AppState},
     ui::GameOver,
+    Velocity,
 };
 pub struct RestartPlugin;
 
@@ -27,6 +28,7 @@ fn restart(
     mut bird_query: Query<
         (
             &mut Transform,
+            &mut Velocity,
             &mut Visibility,
             &mut TextureAtlasSprite,
             &AnimationIndices,
@@ -39,10 +41,16 @@ fn restart(
     mut score: ResMut<Score>,
 ) {
     if states.as_ref() == &AppState::Restart {
-        if let Ok((mut bird_transform, mut bird_visibility, mut bird_sprite, index)) =
-            bird_query.get_single_mut()
+        if let Ok((
+            mut bird_transform,
+            mut bird_velocity,
+            mut bird_visibility,
+            mut bird_sprite,
+            index,
+        )) = bird_query.get_single_mut()
         {
             *bird_transform = Transform::from_xyz(-50.0, -49.0, 3.0);
+            *bird_velocity = Velocity::default();
             *bird_visibility = Visibility::Visible;
             bird_sprite.index = index.first;
         }
@@ -65,15 +73,15 @@ fn randomize_bird(mut query: Query<&mut AnimationIndices, With<Bird>>) {
         match rng {
             0 => {
                 index.first = 0;
-                index.last = 2;
+                index.last = 3;
             }
             1 => {
-                index.first = 3;
-                index.last = 5;
+                index.first = 4;
+                index.last = 6;
             }
             _ => {
-                index.first = 6;
-                index.last = 8;
+                index.first = 7;
+                index.last = 9;
             }
         }
     }

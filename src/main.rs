@@ -51,7 +51,7 @@ fn main() {
         .run();
 }
 
-#[derive(Component, Debug)]
+#[derive(Component, Debug, Default)]
 pub struct Velocity {
     pub value: Vec2,
 }

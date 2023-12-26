@@ -4,13 +4,14 @@ use rand::Rng;
 use crate::{state::AppState, Collider, Velocity};
 
 const PIPE_SIZE: Vec2 = Vec2::new(52.0, 320.0);
+const GAP: f32 = 47.0;
 
 pub struct PipePlugin;
 
 impl Plugin for PipePlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(PipeTimer {
-            spawn: Timer::from_seconds(1.7, TimerMode::Repeating),
+            spawn: Timer::from_seconds(1.2, TimerMode::Repeating),
         })
         .insert_resource(PipeAssets::default())
         .insert_resource(RandomPipe::default())
@@ -70,11 +71,11 @@ fn spawn_pipes(
     };
 
     if timer.spawn.tick(time.delta()).just_finished() {
-        let gap = window.height() * 0.1;
-        let positions = [0.0, gap, -gap, gap * 2.0, gap * 3.0];
-        let pipe_position = (window.height() / 2.0) - gap;
+        let positions = [0.0, GAP, -GAP, GAP * 2.0, GAP * 3.0];
+        let pipe_position = (window.height() / 2.0) - GAP;
         let rng = rand::thread_rng().gen_range(0..positions.len());
         let offset = positions[rng];
+        let move_speed = 150.0;
 
         commands.spawn((
             SpriteBundle {
@@ -91,7 +92,7 @@ fn spawn_pipes(
                 ..default()
             },
             Velocity {
-                value: Vec2::new(100.0, 0.0),
+                value: Vec2::new(move_speed, 0.0),
             },
             Collider { size: PIPE_SIZE },
             TopPipe,
@@ -112,7 +113,7 @@ fn spawn_pipes(
                 ..default()
             },
             Velocity {
-                value: Vec2::new(100.0, 0.0),
+                value: Vec2::new(move_speed, 0.0),
             },
             Collider { size: PIPE_SIZE },
             BottomPipe,
