@@ -5,6 +5,8 @@
   - ( ) Add "swoosh" and "die" sounds
 
 * TODO
+  - ( ) UI animations with tweens
+  - ( ) Fix numbers font
   - ( ) Setup App Icon
   - ( ) Fix double death sound bug
   - ( ) Better Jump

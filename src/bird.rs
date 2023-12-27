@@ -51,13 +51,6 @@ pub struct AnimationIndices {
 #[derive(Component, Deref, DerefMut)]
 struct AnimationTimer(Timer);
 
-#[derive(Component, Default)]
-struct Oscillation {
-    amplitude: f32,
-    length: f32,
-    frequency: f32,
-}
-
 fn load_bird_atlas(
     asset_server: Res<AssetServer>,
     mut bird_assets: ResMut<BirdAssets>,
@@ -93,11 +86,6 @@ fn spawn_bird(mut commands: Commands, bird_assets: ResMut<BirdAssets>) {
         AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
         Velocity::default(),
         Collider { size: BIRD_SIZE },
-        Oscillation {
-            amplitude: 100.0,
-            length: 0.2,
-            frequency: 10.0,
-        },
         Bird,
     ));
 }
@@ -167,16 +155,15 @@ fn animate_bird(
     }
 }
 
-fn sine_movement(
-    mut query: Query<(&mut Transform, &mut Velocity, &Oscillation), With<Bird>>,
-    time: Res<Time>,
-) {
-    for (mut transform, mut velocity, oscillation) in &mut query {
-        velocity.value.y = (time.elapsed_seconds() * oscillation.frequency).sin()
-            * oscillation.amplitude
-            * oscillation.length;
+fn sine_movement(mut query: Query<(&mut Transform, &mut Velocity), With<Bird>>, time: Res<Time>) {
+    let amplitude = 100.0;
+    let length = 0.2;
+    let frequency = 10.0;
+    for (mut transform, mut velocity) in &mut query {
+        velocity.value.y = (time.elapsed_seconds() * frequency).sin() * amplitude * length;
 
         // Apply movement
         transform.translation.y += velocity.value.y * time.delta_seconds();
     }
 }
+

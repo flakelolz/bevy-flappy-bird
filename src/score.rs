@@ -6,17 +6,20 @@ pub struct ScorePlugin;
 
 impl Plugin for ScorePlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(Score { value: 0 })
-            .add_systems(Update, udpate_score.run_if(in_state(AppState::InGame)));
+        app.insert_resource(Score::default()).add_systems(
+            Update,
+            (udpate_score, update_max_score).run_if(in_state(AppState::InGame)),
+        );
     }
 }
 
 #[derive(Component)]
 struct Scored;
 
-#[derive(Resource)]
+#[derive(Resource, Default)]
 pub struct Score {
     pub value: i32,
+    pub max: i32,
 }
 
 fn udpate_score(
@@ -40,7 +43,12 @@ fn udpate_score(
     }
 
     // Update the score UI
-    let mut text = score_ui.single_mut();
-    text.sections[0].value = format!("{}", score.value);
+    score_ui.single_mut().sections[0].value = format!("{}", score.value);
+}
+
+fn update_max_score(mut score: ResMut<Score>) {
+    if score.value > score.max {
+        score.max = score.value;
+    }
 }
 
