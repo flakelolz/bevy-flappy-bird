@@ -127,4 +127,3 @@ fn randomize_background(
         }
     }
 }
-

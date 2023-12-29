@@ -1,3 +1,4 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use bevy::{prelude::*, window::EnabledButtons};
 use bevy_embedded_assets::{EmbeddedAssetPlugin, PluginMode};
 

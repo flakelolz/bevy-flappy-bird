@@ -51,4 +51,3 @@ fn update_max_score(mut score: ResMut<Score>) {
         score.max = score.value;
     }
 }
-

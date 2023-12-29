@@ -1,12 +1,11 @@
 * Working
   - ( ) Move animation for the floor
-  - ( ) Save Max Score
-  - ( ) Game Over UI for max score and retry button
   - ( ) Add "swoosh" and "die" sounds
 
 * TODO
   - ( ) UI animations with tweens
   - ( ) Fix numbers font
+  - ( ) Add medals to game over UI
   - ( ) Setup App Icon
   - ( ) Fix double death sound bug
   - ( ) Better Jump
@@ -36,3 +35,5 @@
   - (x) Animation System
   - (x) Jump animation
   - (x) Bird oscillating movement on the main menu screen
+  - (x) Save Max Score
+  - (x) Game Over UI for max score

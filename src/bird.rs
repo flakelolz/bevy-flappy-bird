@@ -126,12 +126,15 @@ fn bird_jump(
 }
 
 fn animate_bird(
-    mut query: Query<(
-        &AnimationIndices,
-        &mut AnimationTimer,
-        &mut TextureAtlasSprite,
-        &Velocity,
-    )>,
+    mut query: Query<
+        (
+            &AnimationIndices,
+            &mut AnimationTimer,
+            &mut TextureAtlasSprite,
+            &Velocity,
+        ),
+        With<Bird>,
+    >,
     time: Res<Time>,
 ) {
     for (indices, mut timer, mut sprite, velocity) in &mut query {
@@ -166,4 +169,3 @@ fn sine_movement(mut query: Query<(&mut Transform, &mut Velocity), With<Bird>>, 
         transform.translation.y += velocity.value.y * time.delta_seconds();
     }
 }
-
