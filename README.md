@@ -5,6 +5,10 @@ Download and run the executable from [Releases](https://github.com/flakelolz/bev
 Jump: `Space Key` or `Left Mouse Click`
 
 ![Screenshot 2024-02-16 130009](https://github.com/flakelolz/bevy-flappy-bird/assets/41105999/a334792a-d1c0-4b6d-87ef-a0c7ce9d5f12)
+![Screenshot 2024-02-16 143859](https://github.com/flakelolz/bevy-flappy-bird/assets/41105999/11618d8e-bea9-43ed-b41f-a7d1a2225e56)
+![Screenshot 2024-02-16 143939](https://github.com/flakelolz/bevy-flappy-bird/assets/41105999/84865403-33d3-4e5f-b2bd-22ec98eb8137)
+
+
 
 My attempt at making a feature complete Flappy bird clone to learn the bevy engine.
 I wanted to make a game I could "finish". I was intuiting how things might work on the original based on gameplay footage alone
