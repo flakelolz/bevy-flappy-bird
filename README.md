@@ -8,7 +8,7 @@ Jump: `Space Key` or `Left Mouse Click`
 <img src="https://github.com/flakelolz/bevy-flappy-bird/assets/41105999/11618d8e-bea9-43ed-b41f-a7d1a2225e56" width=250>
 <img src="https://github.com/flakelolz/bevy-flappy-bird/assets/41105999/84865403-33d3-4e5f-b2bd-22ec98eb8137" width=250>
 
-
+# 
 My attempt at making a feature complete Flappy bird clone to learn the bevy engine.
 I wanted to make a game I could "finish". I was intuiting how things might work on the original based on gameplay footage alone
 and trying to come up with a solution with the tools and knowledge I had of how Bevy works, so I feel good about this.
